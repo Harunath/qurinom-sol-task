@@ -98,12 +98,12 @@ export function ProductForm({
 				toast.error(msg);
 				return;
 			}
-
-			toast.success(
-				mode === "create"
-					? "Product created successfully"
-					: "Product updated successfully"
-			);
+			if (mode === "create") {
+				toast.success("Product created successfully");
+				router.push(`/merchant/products/${result.id}/edit?created=1`);
+			} else {
+				("Product created successfully");
+			}
 
 			// Clear the form after success (only for create)
 			if (mode === "create") {

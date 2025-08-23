@@ -42,7 +42,6 @@ async function uniqueSlugForStore(
 }
 
 export async function createProductAction(formData: FormData) {
-	console.log("triggered createProductAction");
 	const session = await getServerSession(authOptions);
 	if (!session?.user) throw new Error("Unauthenticated");
 
@@ -139,11 +138,11 @@ export async function createProductAction(formData: FormData) {
 
 		return product;
 	});
-	console.log("created ", created);
-	revalidatePath("/merchant/products");
-	redirect(`/merchant/products/${created.id}/edit?created=1`);
-}
+	if (!created) return { ok: false };
 
+	revalidatePath("/merchant/products");
+	return { ok: true, id: created.id }; // ✅ return, no redirect
+}
 /** Find a unique slug per store when updating (exclude current product). */
 async function uniqueSlugForStoreOnUpdate(
 	tx: { product: { findMany: typeof prisma.product.findMany } },
