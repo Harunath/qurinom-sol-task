@@ -225,25 +225,40 @@ model CartItem {
 // Address (delivery)
 // ----------------------------
 model Address {
-  id        String   @id @default(cuid())
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId    String
+  id      String @id @default(cuid())
+  user    User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId  String
 
-  label       String?  // e.g., "Home", "Office"
-  line1       String
-  line2       String?
-  city        String
-  state       String?
-  country     String   @default("India")
-  pincode     String
-  lat         Float?
-  lng         Float?
+  label     String?   // "Home", "Office"
+  line1     String
+  line2     String?
 
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  // New FK-based location fields
+  state     State  @relation(fields: [stateId], references: [id], onDelete: Restrict)
+  stateId   String
 
-  ordersShipping  Order[]
+  city      City   @relation(fields: [cityId], references: [id], onDelete: Restrict)
+  cityId    String
+
+  area      Area?  @relation(fields: [areaId], references: [id], onDelete: SetNull)
+  areaId    String?
+
+  pincode   String
+  lat       Float?
+  lng       Float?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // If you have orders later:
+  ordersShipping Order[]
+
+  @@index([userId])
+  @@index([stateId])
+  @@index([cityId])
+  @@index([areaId])
 }
+
 
 // ----------------------------
 // Orders (simple status flow)
@@ -287,4 +302,45 @@ model OrderItem {
   imageUrl    String?
 
   @@index([productId])
+}
+
+
+model State {
+  id     String  @id @default(cuid())
+  name   String  @unique            // e.g., "Telangana"
+  code   String? @unique            // e.g., "TG" (optional)
+
+  cities City[]
+  addresses Address[]
+
+  @@index([name])
+}
+
+model City {
+  id      String @id @default(cuid())
+  name    String
+  state   State  @relation(fields: [stateId], references: [id], onDelete: Cascade)
+  stateId String
+
+  areas   Area[]
+  addresses Address[]
+
+  @@unique([name, stateId])        // "Hyderabad" in "Telangana" is unique
+  @@index([name])
+}
+
+model Area {
+  id      String @id @default(cuid())
+  name    String                       // e.g., "Madhapur", "HITEC City"
+  city    City   @relation(fields: [cityId], references: [id], onDelete: Cascade)
+  cityId  String
+
+  pincode String?                      // optional if you’ll capture it at address level
+  lat     Float?
+  lng     Float?
+
+  addresses Address[]
+
+  @@unique([name, cityId])             // "Madhapur" within "Hyderabad" unique
+  @@index([name])
 }
