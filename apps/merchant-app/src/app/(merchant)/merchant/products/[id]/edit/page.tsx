@@ -8,10 +8,14 @@ export default async function Page({
 	params,
 	searchParams,
 }: {
-	params: { id: string };
-	searchParams: Record<string, string>;
+	params: Promise<Record<string, string>>;
+	searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
-	const { id } = params;
+	const { id } = await params; // from [id]
+	const spRaw = (await searchParams) ?? {};
+	const sp = Object.fromEntries(
+		Object.entries(spRaw).map(([k, v]) => [k, Array.isArray(v) ? v[0] : v])
+	) as Record<string, string | undefined>;
 	const [product, categories] = await Promise.all([
 		prisma.product.findUnique({
 			where: { id },
@@ -55,7 +59,7 @@ export default async function Page({
 
 	return (
 		<div className="p-6 space-y-4">
-			{searchParams.created ? (
+			{sp.created ? (
 				<div className="rounded-xl border border-green-200 bg-green-50 p-3 text-sm">
 					Product created.
 				</div>

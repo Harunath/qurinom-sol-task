@@ -4,9 +4,10 @@ import prisma from "@repo/db/client";
 
 export async function GET(
 	_: NextRequest,
-	{ params }: { params: { id: string } }
+	{ params }: { params: Promise<{ id: string }> }
 ) {
-	const item = await prisma.product.findUnique({ where: { id: params.id } });
+	const { id } = await params;
+	const item = await prisma.product.findUnique({ where: { id } });
 	if (!item) return NextResponse.json({ error: "Not found" }, { status: 404 });
 	return NextResponse.json(item);
 }

@@ -237,28 +237,41 @@ model CartItem {
 // ----------------------------
 // Address (delivery)
 // ----------------------------
-model Address {
-  id      String @id @default(cuid())
-  user    User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId  String
+// Add this enum
+enum AddressType {
+  HOME
+  WORK
+  OTHER
+}
 
-  label     String?   // "Home", "Office"
+model Address {
+  id        String   @id @default(cuid())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+
+  // Type + optional human label
+  type      AddressType @default(HOME) // HOME / WORK / OTHER
+  label     String?     // e.g., "Head Office", "Parents' Home"
+
   line1     String
   line2     String?
 
-  // New FK-based location fields
-  state     State  @relation(fields: [stateId], references: [id], onDelete: Restrict)
+  // FK-based location fields
+  state     State   @relation(fields: [stateId], references: [id], onDelete: Restrict)
   stateId   String
 
-  city      City   @relation(fields: [cityId], references: [id], onDelete: Restrict)
+  city      City    @relation(fields: [cityId], references: [id], onDelete: Restrict)
   cityId    String
 
-  area      Area?  @relation(fields: [areaId], references: [id], onDelete: SetNull)
+  area      Area?   @relation(fields: [areaId], references: [id], onDelete: SetNull)
   areaId    String?
 
   pincode   String
   lat       Float?
   lng       Float?
+
+  // Default address flag
+  isDefault Boolean  @default(false)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -270,7 +283,9 @@ model Address {
   @@index([stateId])
   @@index([cityId])
   @@index([areaId])
+  @@index([userId, isDefault]) // helps lookups for the default address
 }
+
 
 
 // ----------------------------
