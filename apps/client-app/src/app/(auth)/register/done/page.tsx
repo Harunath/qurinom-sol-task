@@ -4,7 +4,8 @@ import React from "react";
 const page = () => {
 	return (
 		<div>
-			<DonePage />
+			{/* <DonePage /> */}
+			done page
 		</div>
 	);
 };

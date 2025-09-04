@@ -4,7 +4,8 @@ import React from "react";
 function page() {
 	return (
 		<div>
-			<RegisterStore />
+			{/* <RegisterStore /> */}
+			register - business
 		</div>
 	);
 }

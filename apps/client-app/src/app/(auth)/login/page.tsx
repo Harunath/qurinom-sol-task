@@ -4,7 +4,8 @@ import React from "react";
 function page() {
 	return (
 		<div>
-			<LoginPage />
+			{/* <LoginPage /> */}
+			login page
 		</div>
 	);
 }

@@ -6,7 +6,7 @@ export default function Page() {
 			<h1 className="mb-6 text-2xl font-bold tracking-tight">
 				Finish signup: Address
 			</h1>
-			<CreateAddress />
+			{/* <CreateAddress /> */}
 		</div>
 	);
 }

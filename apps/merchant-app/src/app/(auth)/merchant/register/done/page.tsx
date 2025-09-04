@@ -4,21 +4,21 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 
 export default async function Page() {
-	const session = await getServerSession(authOptions);
-	if (!session) redirect("/login?callbackUrl=/merchant/register/done");
+	// const session = await getServerSession(authOptions);
+	// if (!session) redirect("/login?callbackUrl=/merchant/register/done");
 
-	// If you want to strictly require a store before showing "done", uncomment:
-	// if (!session.user.storeCompleted) redirect("/merchant/register/store");
+	// // If you want to strictly require a store before showing "done", uncomment:
+	// // if (!session.user.storeCompleted) redirect("/merchant/register/store");
 
-	const name = session.user?.name ?? null;
-	const first = name?.split(" ")[0] ?? "There";
+	// const name = session.user?.name ?? null;
+	// const first = name?.split(" ")[0] ?? "There";
 
 	return (
 		<div className="relative min-h-[calc(100dvh-4rem)] bg-gradient-to-b from-white to-gray-50 px-4 py-10">
 			<div className="mx-auto w-full max-w-2xl">
-				<Hero />
-
-				<div className="mt-6 overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
+				done
+				{/* <Hero /> */}
+				{/* <div className="mt-6 overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
 					<div className="relative px-6 pb-6 pt-8 sm:px-8">
 						<SuccessBadge />
 
@@ -77,9 +77,8 @@ export default async function Page() {
 							<QuickLink href="/me" label="My account" />
 						</div>
 					</div>
-				</div>
-
-				<FooterNote />
+				</div> */}
+				{/* <FooterNote /> */}
 			</div>
 		</div>
 	);
