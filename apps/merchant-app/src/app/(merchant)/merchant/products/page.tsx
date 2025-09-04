@@ -2,7 +2,14 @@ import Link from "next/link";
 import prisma from "@repo/db/client";
 
 export default async function Page() {
-	const items = await prisma.product.findMany({
+	type Product = {
+		id: string;
+		name: string;
+		price: number;
+		stock: number;
+	};
+
+	const items: Product[] = await prisma.product.findMany({
 		orderBy: { updatedAt: "desc" },
 		select: { id: true, name: true, price: true, stock: true },
 	});

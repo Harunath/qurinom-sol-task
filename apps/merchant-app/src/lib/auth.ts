@@ -3,7 +3,8 @@ import type { NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
-import prisma, { Role } from "@repo/db/client";
+import prisma from "@repo/db/client";
+import { Role } from "@repo/db/client";
 
 export const authOptions: NextAuthOptions = {
 	session: { strategy: "jwt" },

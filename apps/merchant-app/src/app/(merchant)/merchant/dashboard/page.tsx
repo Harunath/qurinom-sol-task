@@ -59,7 +59,7 @@ export default async function DashboardPage() {
 	});
 
 	const images = await prisma.productImage.findMany({
-		where: { productId: { in: latest.map((p) => p.id) } },
+		where: { productId: { in: latest.map((p: { id: string }) => p.id) } },
 		orderBy: { createdAt: "asc" },
 		select: { productId: true, url: true },
 	});
@@ -115,49 +115,59 @@ export default async function DashboardPage() {
 					</div>
 				) : (
 					<ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-						{latest.map((p) => {
-							const img = firstImageByProduct.get(p.id);
-							return (
-								<li key={p.id} className="rounded-2xl border p-3 shadow-sm">
-									<div className="aspect-[4/3] overflow-hidden rounded-xl bg-gray-50">
-										{img ? (
-											// eslint-disable-next-line @next/next/no-img-element
-											<img
-												src={img}
-												alt={p.name}
-												className="h-full w-full object-cover"
-												loading="lazy"
-											/>
-										) : (
-											<div className="flex h-full items-center justify-center text-xs text-gray-400">
-												No Image
+						{latest.map(
+							(p: {
+								id: string;
+								name: string;
+								slug: string;
+								price: number;
+								stock: number;
+								categoryName: string;
+								updatedAt: Date;
+							}) => {
+								const img = firstImageByProduct.get(p.id);
+								return (
+									<li key={p.id} className="rounded-2xl border p-3 shadow-sm">
+										<div className="aspect-[4/3] overflow-hidden rounded-xl bg-gray-50">
+											{img ? (
+												// eslint-disable-next-line @next/next/no-img-element
+												<img
+													src={img}
+													alt={p.name}
+													className="h-full w-full object-cover"
+													loading="lazy"
+												/>
+											) : (
+												<div className="flex h-full items-center justify-center text-xs text-gray-400">
+													No Image
+												</div>
+											)}
+										</div>
+										<div className="mt-3 space-y-1">
+											<div className="line-clamp-1 font-medium">{p.name}</div>
+											<div className="text-sm text-gray-600">
+												{p.categoryName}
 											</div>
-										)}
-									</div>
-									<div className="mt-3 space-y-1">
-										<div className="line-clamp-1 font-medium">{p.name}</div>
-										<div className="text-sm text-gray-600">
-											{p.categoryName}
+											<div className="text-sm text-gray-700">
+												₹{p.price} • Stock {p.stock}
+											</div>
 										</div>
-										<div className="text-sm text-gray-700">
-											₹{p.price} • Stock {p.stock}
+										<div className="mt-3 flex gap-2">
+											<Link
+												href={`/merchant/products/${p.id}/edit`}
+												className="rounded-lg border px-3 py-1 text-sm font-semibold">
+												Edit
+											</Link>
+											<Link
+												href={`/p/${p.slug}`}
+												className="rounded-lg px-3 py-1 text-sm font-semibold underline">
+												Preview
+											</Link>
 										</div>
-									</div>
-									<div className="mt-3 flex gap-2">
-										<Link
-											href={`/merchant/products/${p.id}/edit`}
-											className="rounded-lg border px-3 py-1 text-sm font-semibold">
-											Edit
-										</Link>
-										<Link
-											href={`/p/${p.slug}`}
-											className="rounded-lg px-3 py-1 text-sm font-semibold underline">
-											Preview
-										</Link>
-									</div>
-								</li>
-							);
-						})}
+									</li>
+								);
+							}
+						)}
 					</ul>
 				)}
 			</section>

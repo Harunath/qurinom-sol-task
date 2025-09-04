@@ -9,7 +9,7 @@ const Providers = ({ children }: { children: ReactNode }) => {
 		<div>
 			<ToastContainer
 				position="top-right"
-				autoClose={5000} // Close after 5 seconds
+				autoClose={5000}
 				hideProgressBar={false}
 				newestOnTop={false}
 				closeOnClick
@@ -17,7 +17,7 @@ const Providers = ({ children }: { children: ReactNode }) => {
 				pauseOnFocusLoss
 				draggable
 				pauseOnHover
-				theme="light" // Options: 'light', 'dark', 'colored'
+				theme="light"
 			/>
 			<SessionProvider>{children}</SessionProvider>
 		</div>
